@@ -1,0 +1,11 @@
+{
+  "name": "face-detection-app",
+  "version": "1.0.0",
+  "description": "Face detection app with Bingo chips messages",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "vite": "^4.3.9"
+  }
+}
