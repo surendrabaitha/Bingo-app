@@ -45,17 +45,17 @@ async function loadFaceApiModels() {
   }
 }
 
-function detectFaceAndShowText() {
+async function detectFaceAndShowText() {
+  if (!faceapi.nets.tinyFaceDetector.isLoaded) {
+    console.error("Face detector model is not yet loaded.");
+    return;
+  }
+
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  setInterval(async () => {
+  async function detectFaces() {
     try {
-      if (!faceapi.nets.tinyFaceDetector.params) {
-        console.error("Face detector model not loaded yet!");
-        return;
-      }
-
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks();
@@ -65,6 +65,7 @@ function detectFaceAndShowText() {
       if (detections.length > 0) {
         ctx.font = "24px Arial";
         ctx.fillStyle = "red";
+
         ctx.fillText(currentMessage, 50, 50);
 
         const now = Date.now();
@@ -74,8 +75,12 @@ function detectFaceAndShowText() {
           lastMessageUpdateTime = now;
         }
       }
+
+      requestAnimationFrame(detectFaces); // Optimized for better performance
     } catch (error) {
       console.error("Face detection error:", error);
     }
-  }, 500);
+  }
+
+  detectFaces(); // Start detection
 }
